@@ -4,13 +4,25 @@ import { TextCard } from "@/components";
 import { useNavigate } from "react-router-dom";
 import { deleteNote } from "../../store/notes/notes-slice";
 import { NoteAPI } from "../../api/noteAPI";
+import Swal from "sweetalert2";
 
 export function NoteList({noteList}){
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
     async function deleteNote_(note) {
-        if(window.confirm("Delete note?")){
+        const result = await Swal.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this action",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Yes, delete it!',
+            cancelButtonText: 'Cancel'
+        });
+
+        if(result.isConfirmed){
             NoteAPI.deleteById(note.id);
             dispatch(deleteNote(note));
         }
